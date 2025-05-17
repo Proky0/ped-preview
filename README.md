@@ -75,6 +75,17 @@ end)
   </tr>
 </table>
 
+
+## Contribution
+
+Contributions are welcome! To suggest an improvement, open an *issue* or submit a *pull request* on GitHub. Please follow these steps:
+
+1. Fork the repository and create a dedicated branch (`feature/your-feature`).
+2. Clearly describe your changes in the *pull request*.
+3. Make sure your code follows the project's style.
+
+Thank you for helping improve this project!
+
 ## License
 
 You are free to use and modify this resource, but you must provide credit to the original author. All rights reserved.
