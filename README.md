@@ -62,10 +62,18 @@ end)
 
 ## Preview
 
-<p align="center">
-  <img src="./assets/preview.gif" alt="Ped Preview" width="49%" style="display:inline-block; margin-right:10px;" />
-  <img src="./assets/preview_ox_inventory.gif" alt="Ped Inventory Preview" width="49%" style="display:inline-block;" />
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <strong>Standard Ped Preview</strong><br>
+      <img src="./assets/preview.gif" alt="Ped Preview"/>
+    </td>
+    <td align="center">
+      <strong>Inventory Ped Preview</strong><br>
+      <img src="./assets/preview_ox_inventory.gif" alt="Ped Inventory Preview"/>
+    </td>
+  </tr>
+</table>
 
 ## License
 
