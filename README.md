@@ -62,8 +62,10 @@ end)
 
 ## Preview
 
-![Ped Preview](/assets/preview.gif)
-![Ped Inventory Preview](/assets/preview_ox_inventory.gif)
+<div style="display: flex; gap: 10px;">
+  <img src="./assets/preview.gif" alt="Ped Preview" width="50%">
+  <img src="./assets/preview_ox_inventory.gif" alt="Ped Inventory Preview" width="50%">
+</div>
 
 ## License
 
