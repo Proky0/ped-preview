@@ -28,7 +28,7 @@ function Interface.createPed()
 		pedPreview = nil
 	end
 
-	local playerPed   = cache.ped
+	local playerPed   = PlayerPedId()
 	local playerModel = GetEntityModel( playerPed )
 
 	local camCoords   = GetGameplayCamCoord()
@@ -50,13 +50,12 @@ function Interface.createPed()
 	ClonePedToTarget( playerPed, pedPreview )
 
 	SetEntityInvincible( pedPreview, true )
-	FreezeEntityPosition( pedPreview, false ) -- Changed to false to allow movement
+	FreezeEntityPosition( pedPreview, false )
 	SetEntityCollision( pedPreview, false, true )
 
 	SetBlockingOfNonTemporaryEvents( pedPreview, true )
 	TaskSetBlockingOfNonTemporaryEvents( pedPreview, true )
 
-	-- Make the ped cross arms
 	RequestAnimDict( "anim@amb@nightclub@peds@" )
 	while not HasAnimDictLoaded( "anim@amb@nightclub@peds@" ) do
 		Wait( 100 )
@@ -64,11 +63,9 @@ function Interface.createPed()
 
 	TaskPlayAnim( pedPreview, "anim@amb@nightclub@peds@", "rcmme_amanda1_stand_loop_cop", 8.0, -8.0, -1, 1, 0, false, false, false )
 
-	-- Set network properties
 	NetworkSetEntityInvisibleToNetwork( pedPreview, true )
 	SetEntityVisible( pedPreview, true )
 
-	-- Create a thread to constantly update ped position and rotation
 	CreateThread( function ()
 		while DoesEntityExist( pedPreview ) do
 			local camCoords = GetGameplayCamCoord()
@@ -84,7 +81,7 @@ function Interface.createPed()
 			local pos = vector3(
 				camCoords.x + forwardX * Interface.distance,
 				camCoords.y + forwardY * Interface.distance,
-				camCoords.z + forwardZ * Interface.distance - 1.0 -- Ajustement hauteur
+				camCoords.z + forwardZ * Interface.distance - 1.0
 			)
 
 			SetEntityCoords( pedPreview, pos.x, pos.y, pos.z )
