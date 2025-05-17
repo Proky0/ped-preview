@@ -63,8 +63,8 @@ end)
 ## Preview
 
 <p align="center">
-  <img src="./assets/preview.gif" alt="Ped Preview" width="45%" style="display:inline-block; margin-right:10px;" />
-  <img src="./assets/preview_ox_inventory.gif" alt="Ped Inventory Preview" width="45%" style="display:inline-block;" />
+  <img src="./assets/preview.gif" alt="Ped Preview" width="49%" style="display:inline-block; margin-right:10px;" />
+  <img src="./assets/preview_ox_inventory.gif" alt="Ped Inventory Preview" width="49%" style="display:inline-block;" />
 </p>
 
 ## License
