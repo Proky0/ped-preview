@@ -1,7 +1,7 @@
 local Interface = {}
 
-Interface.distance = 0.38
-Interface.scalePed = 0.10
+Interface.distance = 1.10
+Interface.scalePed = 0.30
 
 local pedPreview = nil
 
@@ -22,39 +22,30 @@ function Interface.applyEntityScale( entity, scale )
 	)
 end
 
-function Interface.createPed()
+function Interface.createPed( playerPed )
 	if DoesEntityExist( pedPreview ) then
 		DeleteEntity( pedPreview )
 		pedPreview = nil
 	end
 
-	local playerPed   = PlayerPedId()
+	playerPed = playerPed or PlayerPedId()
 	local playerModel = GetEntityModel( playerPed )
 
-	local camCoords   = GetGameplayCamCoord()
-	local camRot      = GetGameplayCamRot( 2 )
-	local camHeading  = GetGameplayCamRelativeHeading()
-
-	local forward = vector3(
-		-math.sin( math.rad( camRot.z ) ) * math.abs( math.cos( math.rad( camRot.x ) ) ),
-		math.cos( math.rad( camRot.z ) ) * math.abs( math.cos( math.rad( camRot.x ) ) ),
-		math.sin( math.rad( camRot.x ) )
-	)
-
-	local posX = camCoords.x + forward.x * Interface.distance
-	local posY = camCoords.y + forward.y * Interface.distance
-	local posZ = camCoords.z + forward.z * Interface.distance
-
-	pedPreview = CreatePed( 4, playerModel, posX, posY, posZ - 1.0, 0.0, false, true )
-
+	pedPreview = CreatePed( 4, playerModel, 0.0, 0.0, 0.0, 0.0, false, false )
 	ClonePedToTarget( playerPed, pedPreview )
 
 	SetEntityInvincible( pedPreview, true )
 	FreezeEntityPosition( pedPreview, false )
 	SetEntityCollision( pedPreview, false, true )
 
+	SetEntityCanBeDamaged( pedPreview, false )
 	SetBlockingOfNonTemporaryEvents( pedPreview, true )
 	TaskSetBlockingOfNonTemporaryEvents( pedPreview, true )
+
+	SetEntityVisible( pedPreview, true )
+	NetworkSetEntityInvisibleToNetwork( pedPreview, true )
+
+	DisableIdleCamera( true )
 
 	RequestAnimDict( "anim@amb@nightclub@peds@" )
 	while not HasAnimDictLoaded( "anim@amb@nightclub@peds@" ) do
@@ -62,9 +53,6 @@ function Interface.createPed()
 	end
 
 	TaskPlayAnim( pedPreview, "anim@amb@nightclub@peds@", "rcmme_amanda1_stand_loop_cop", 8.0, -8.0, -1, 1, 0, false, false, false )
-
-	NetworkSetEntityInvisibleToNetwork( pedPreview, true )
-	SetEntityVisible( pedPreview, true )
 
 	CreateThread( function ()
 		while DoesEntityExist( pedPreview ) do
@@ -78,13 +66,23 @@ function Interface.createPed()
 			local forwardY = math.cos( heading ) * math.abs( math.cos( pitch ) )
 			local forwardZ = math.sin( pitch )
 
-			local pos = vector3(
-				camCoords.x + forwardX * Interface.distance,
-				camCoords.y + forwardY * Interface.distance,
-				camCoords.z + forwardZ * Interface.distance - 1.0
+			local distance = Interface.distance
+			local camDistance = #(GetEntityCoords( playerPed ) - camCoords)
+
+			if IsPedInAnyVehicle( playerPed, false ) then
+				local vehicle = GetVehiclePedIsIn( playerPed, false )
+				local speed = GetEntitySpeed( vehicle )
+
+				distance = Interface.distance + (speed * 0.012) + (camDistance * 0.005)
+			end
+
+			local position = vector3(
+				camCoords.x + forwardX * distance,
+				camCoords.y + forwardY * distance,
+				camCoords.z + forwardZ * distance - 1.01
 			)
 
-			SetEntityCoords( pedPreview, pos.x, pos.y, pos.z )
+			SetEntityCoords( pedPreview, position.x, position.y, position.z )
 			SetEntityRotation( pedPreview, -camRot.x, camRot.y, camRot.z + 180.0, 2, true )
 
 			Interface.applyEntityScale( pedPreview, Interface.scalePed )
@@ -103,10 +101,12 @@ function Interface.deletePed()
 end
 
 function Interface.refreshPed()
-	if DoesEntityExist( pedPreview ) then
-		local playerPed = cache.ped or PlayerPedId()
-		ClonePedToTarget( playerPed, pedPreview )
+	if not DoesEntityExist( pedPreview ) then
+		return
 	end
+
+	local playerPed = PlayerPedId() or cache.ped
+	ClonePedToTarget( playerPed, pedPreview )
 end
 
 exports( "createPed", function () Interface.createPed() end )
