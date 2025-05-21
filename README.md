@@ -51,7 +51,8 @@ Interface.scalePed = 0.10  -- Ped scale (size)
 ```lua
 -- Create preview when player opens a menu
 RegisterCommand("showped", function()
-  exports['ped-preview']:createPed()
+  local playerPed = PlayerPedId()
+  exports['ped-preview']:createPed( playerPed )
 end)
 
 -- Delete preview when menu closes
